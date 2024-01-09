@@ -10,8 +10,8 @@ class Group extends Model
 {
     use HasFactory;
 
-    public function usuarios(): BelongsToMany
+    public function clients(): BelongsToMany
     {
-        return $this->belongsToMany(Client::class);
+        return $this->belongsToMany(Client::class, 'clients_groups');
     }
 }

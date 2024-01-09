@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
-use Illuminate\Http\Request;
+ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
@@ -88,4 +88,55 @@ class ClientController extends Controller
         ];
         return response()->json($data);
     }
+
+    public function attach(Request $request)
+    {
+        $client = Client::find($request->client_id);
+        $client->groups()->attach($request->group_id);
+        $data = [
+            'message' => 'Group agregado correctamente',
+            'client' => $client
+        ];
+        return response()->json($data);
+    }
+
+    public function displayClientGroups(Client $client)
+    {
+        $data = [
+            'message' => 'Groups del cliente',
+            'client' => $client,
+            'groups' => $client->groups
+        ];
+        return response()->json($data);
+    }
+
+
+    public function clientAndGroups(Client $client)
+    {
+        $clients = Client::all();
+        $array = [];
+        foreach ($clients as $client) {
+            $array[] = [
+                'id' => $client->id,
+                'name' => $client->name,
+                'email' => $client->email,
+                'phone_number' => $client->phone_number,
+                'address' => $client->address,
+                'groups' => $client->groups
+            ];
+        }
+        return response()->json($array);
+    }
+
+    public function detach(Request $request)
+    {
+        $client = Client::find($request->client_id);
+        $client->groups()->detach($request->group_id);
+        $data = [
+            'message' => 'Group eliminado correctamente',
+            'client' => $client
+        ];
+        return response()->json($data);
+    }
+    
 }

@@ -12,7 +12,9 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+        $groups = Group::all();
+        //return groups list to json response
+        return response()->json($groups);
     }
 
     /**
@@ -28,7 +30,17 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+            
+            $group = new Group;
+            $group->name = $request->name;
+            $group->description = $request->description;
+            $group->price = $request->price;
+            $group->save();
+            $data = [
+                'message' => 'Group creado correctamente',
+                'group' => $group
+            ];
+            return response()->json($data);
     }
 
     /**
@@ -36,7 +48,7 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        //
+        return response()->json($group);
     }
 
     /**
@@ -52,7 +64,15 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        $group->name = $request->name;
+        $group->description = $request->description;
+        $group->price = $request->price;
+        $group->save();
+        $data = [
+            'message' => 'Group actualizado correctamente',
+            'group' => $group
+        ];
+        return response()->json($data);
     }
 
     /**
@@ -60,6 +80,31 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        $group->delete();
+        $data = [
+            'message' => 'Group eliminado correctamente',
+            'group' => $group
+        ];
+        return response()->json($data);
     }
+
+    /**
+     * Display the specified resource.
+     */ 
+    //funcion para saber cuantos clientes tiene cada grupo
+    public function clientList(Request $request)
+    {
+
+        $group = Group::find($request->group_id);
+        
+        $data = [
+            'message' => 'Clientes del grupo',
+            'info extra' => 'Se muestra el numero de clientes que tiene cada grupo',
+            'Info grupo' => $group,
+            'clients' => $group->clients
+        ];
+        return response()->json($data);
+    }
+
+ 
 }
